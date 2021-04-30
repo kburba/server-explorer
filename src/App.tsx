@@ -3,7 +3,7 @@ import { ConnectedRouter } from 'connected-react-router/immutable';
 import { Route, Switch } from 'react-router';
 import { history } from './store/configureStore';
 import Login from './containers/Login';
-import Servers from './containers/Servers';
+import Servers from './containers/servers/Servers';
 
 function App() {
   return (
