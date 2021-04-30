@@ -12,12 +12,13 @@ import { createBrowserHistory, History } from 'history';
 
 import monitorReducersEnhancer from './monitorReducer';
 import loggerMiddleware from './logger';
-import sagas from './sagas/rootSaga';
+import sagas from './sagas/root.saga';
 import createRootReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 export const history: History = createBrowserHistory();
 const rootReducer = createRootReducer(history);
+export type RootState = ReturnType<typeof rootReducer>;
 
 export default function configureStore(): Store {
   const middlewares = [

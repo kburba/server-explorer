@@ -1,16 +1,15 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import { AUTH_ACTIONS } from '../actions/types';
-import { loginUserError } from '../actions/authActions';
 import setAuthToken from '../../utils/setAuthToken';
 import { loginApi } from '../storeUtils';
-import { LoginResponse, LoginUser } from '../types/authTypes';
+import { LoginResponse, LoginUser } from '../types/auth.types';
 import { push } from 'connected-react-router';
+import { setError } from '../actions/ui.actions';
 
 function* logoutUserSaga() {
   try {
     // Remove token from local storage
     localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
 
     // Delete auth token
     setAuthToken(null);
@@ -18,26 +17,35 @@ function* logoutUserSaga() {
     // Redirect to login
     yield put(push('/login'));
   } catch (error) {
-    console.log('error', error);
+    yield put(
+      setError({
+        key: 'logout',
+        message: error.message,
+      })
+    );
   }
 }
 
 function* loginUserSaga({ payload }: LoginUser) {
   try {
-    const { email, password } = payload;
-    const response: LoginResponse = yield call(loginApi, { email, password });
+    const { username, password } = payload;
+    const response: LoginResponse = yield call(loginApi, {
+      username,
+      password,
+    });
+    // // Set access token to Auth header
+    setAuthToken(response.token);
+
     // Save to localStorage
-    const { access_token, refresh_token } = response;
-
-    yield localStorage.setItem('access_token', `Bearer ${access_token}`);
-    yield localStorage.setItem('refresh_token', refresh_token);
-
-    // Set access token to Auth header
-    setAuthToken(access_token);
-
+    yield localStorage.setItem('access_token', `Bearer ${response.token}`);
     yield put(push('/'));
   } catch (error) {
-    yield put(loginUserError(error.response.data));
+    yield put(
+      setError({
+        key: 'login',
+        message: error.message,
+      })
+    );
   }
 }
 
