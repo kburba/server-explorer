@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
-import { Redirect } from 'react-router';
-import setAuthToken from '../utils/setAuthToken';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../store/actions/auth.actions';
 
 export default function Logout() {
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    setAuthToken(null);
-  }, []);
-  return <Redirect to="/login" />;
+    dispatch(logoutUser());
+  }, [dispatch]);
+  return null;
 }
