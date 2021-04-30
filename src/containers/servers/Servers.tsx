@@ -4,6 +4,7 @@ import { getServers } from '../../store/actions/server.actions';
 import { RootState } from '../../store/configureStore';
 import { ServersState } from '../../store/types/server.types';
 import { UiReducerState } from '../../store/types/ui.types';
+import NavBar from '../NavBar';
 import ServersTable from './ServersTable';
 
 export default function Servers() {
@@ -27,7 +28,8 @@ export default function Servers() {
   }));
 
   return (
-    <div>
+    <div className="container">
+      <NavBar />
       <h1>Servers</h1>
       {errors.getServers && <div className="errorMsg">{errors.getServers}</div>}
       {isLoading.getServers && <div>Loading...</div>}

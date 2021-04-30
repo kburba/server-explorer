@@ -4,13 +4,17 @@ import { Route, Switch } from 'react-router';
 import { history } from './store/configureStore';
 import Login from './containers/Login';
 import Servers from './containers/servers/Servers';
+import './styles/index.scss';
+import Logout from './containers/Logout';
 
 function App() {
   return (
     <ConnectedRouter history={history}>
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/" component={Servers} />
+        <Route path="/logout" component={Logout} />
+        <Route path="/" component={Servers} exact />
+        <Route component={() => <div>Route Not Found</div>} />
       </Switch>
     </ConnectedRouter>
   );

@@ -1,13 +1,19 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import { getServersSuccess } from '../actions/server.actions';
 import { SERVERS_ACTIONS } from '../actions/types';
-import { setError, setLoader, unsetLoader } from '../actions/ui.actions';
+import {
+  resetErrors,
+  setError,
+  setLoader,
+  unsetLoader,
+} from '../actions/ui.actions';
 import { apiFetch } from '../storeUtils';
 import { ServerType } from '../types/server.types';
 
 function* getServersSaga() {
   try {
     yield put(setLoader(['getServers']));
+    yield put(resetErrors());
     const response: ServerType[] = yield call(apiFetch, '/v1/servers');
     yield put(getServersSuccess(response));
   } catch (error) {

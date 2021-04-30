@@ -24,6 +24,7 @@ export default function Table({ columns, data }: TableProps) {
     <div>
       <input
         type="text"
+        placeholder="Search..."
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
       ></input>

@@ -22,13 +22,19 @@ export default function Login() {
     errors: uiReducer.errors,
   }));
 
-  const buttonTitle = isLoading.login ? 'Loading...' : 'Click gere to Log in';
+  const buttonTitle = isLoading.login ? 'Loading...' : 'Click here to Log in';
   return (
-    <div>
-      {errors.login && <div className="errorMsg">{errors.login}</div>}
-      <button type="button" onClick={handleLoginClick}>
-        {buttonTitle}
-      </button>
+    <div className="container login">
+      <div className="absolute-center">
+        <button
+          className="kbbutton primary"
+          type="button"
+          onClick={handleLoginClick}
+        >
+          {buttonTitle}
+        </button>
+        {errors.login && <div className="errorMsg">{errors.login}</div>}
+      </div>
     </div>
   );
 }
