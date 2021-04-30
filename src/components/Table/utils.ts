@@ -37,3 +37,18 @@ export function formatCellValue(value: any, type?: TableValueTypes) {
       return value;
   }
 }
+
+export function getFilterMatch(text: string = '', filter: string = '') {
+  if (!text || !filter) {
+    return { parts: [text], searchWords: [] };
+  }
+
+  const searchWords = filter.toLowerCase().split(' ');
+  const searchRx = filter
+    .toLowerCase()
+    .replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')
+    .replace(/ /g, '|');
+
+  const parts = text.toString().split(new RegExp(`(${searchRx})`, 'gi'));
+  return { parts, searchWords };
+}

@@ -18,5 +18,9 @@ const TABLE_COLUMNS = [
 ];
 
 export default function ServersTable({ servers }: Props) {
-  return <Table data={servers} columns={TABLE_COLUMNS} />;
+  return (
+    <div>
+      <Table data={servers} columns={TABLE_COLUMNS} />
+    </div>
+  );
 }

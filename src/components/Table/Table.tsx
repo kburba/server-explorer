@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TableColumn } from './table.types';
-import { formatCellValue, useSortBy } from './utils';
+import TextMatchingFilter from './TextMatchingFilter';
+import { formatCellValue, getFilterMatch, useSortBy } from './utils';
 
 type TableProps = {
   columns: TableColumn[];
@@ -9,57 +10,84 @@ type TableProps = {
 };
 
 export default function Table({ columns, data }: TableProps) {
-  const [sortedData, sortBy, setSort] = useSortBy(data);
+  const [filter, setFilter] = useState('');
+  const filteredData = filter
+    ? data.filter((item) =>
+        JSON.stringify(Object.values(item))
+          .toLowerCase()
+          .includes(filter.toLowerCase())
+      )
+    : data;
+  const [sortedData, sortBy, setSort] = useSortBy(filteredData);
 
   return (
-    <table className="kbtable">
-      <thead>
-        <tr>
-          {columns.map((column, idx) => {
-            const sortIcon =
-              sortBy && sortBy.by === column.valueKey
-                ? sortBy.asc
-                  ? String.fromCharCode(8595)
-                  : String.fromCharCode(8593)
-                : null;
+    <div>
+      <input
+        type="text"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+      ></input>
+      <table className="kbtable">
+        <thead>
+          <tr>
+            {columns.map((column, idx) => {
+              const sortIcon =
+                sortBy && sortBy.by === column.valueKey
+                  ? sortBy.asc
+                    ? String.fromCharCode(8595)
+                    : String.fromCharCode(8593)
+                  : null;
+              return (
+                <th
+                  key={`${idx}-${column}`}
+                  onClick={() => setSort(column.valueKey)}
+                >
+                  {column.title} {sortIcon}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {sortedData.map((item, rowIdx) => {
             return (
-              <th
-                key={`${idx}-${column}`}
-                onClick={() => setSort(column.valueKey)}
-              >
-                {column.title} {sortIcon}
-              </th>
+              <tr key={rowIdx}>
+                {columns.map((column, colIdx) => {
+                  const cellValue = formatCellValue(
+                    item[column.valueKey],
+                    column.valueType
+                  );
+                  const { parts, searchWords } = getFilterMatch(
+                    cellValue,
+                    filter
+                  );
+                  const filteredCellValue = (
+                    <TextMatchingFilter
+                      parts={parts}
+                      searchWords={searchWords}
+                    />
+                  );
+                  const valueAsLink = column.onClick ? (
+                    <Link
+                      to={`${column.onClick.linkPrefix}${
+                        item[column.onClick.linkKey]
+                      }`}
+                    >
+                      {filteredCellValue}
+                    </Link>
+                  ) : (
+                    filteredCellValue
+                  );
+                  return (
+                    <td key={`${colIdx}-${column.title}`}>{valueAsLink}</td>
+                  );
+                })}
+              </tr>
             );
           })}
-        </tr>
-      </thead>
-      <tbody>
-        {sortedData.map((item, rowIdx) => {
-          return (
-            <tr key={rowIdx}>
-              {columns.map((column, colIdx) => {
-                const cellValue = formatCellValue(
-                  item[column.valueKey],
-                  column.valueType
-                );
-                const valueAsLink = column.onClick ? (
-                  <Link
-                    to={`${column.onClick.linkPrefix}${
-                      item[column.onClick.linkKey]
-                    }`}
-                  >
-                    {cellValue}
-                  </Link>
-                ) : (
-                  cellValue
-                );
-                return <td key={`${colIdx}-${column.title}`}>{valueAsLink}</td>;
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-      <tfoot></tfoot>
-    </table>
+        </tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
   );
 }
