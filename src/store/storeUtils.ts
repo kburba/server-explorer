@@ -1,4 +1,5 @@
 import Axios, { AxiosRequestConfig } from 'axios';
+import { history } from './configureStore';
 import { LoginRequest } from './types/auth.types';
 
 export function loginApi(authParams: LoginRequest): Promise<any> {
@@ -9,10 +10,7 @@ export function loginApi(authParams: LoginRequest): Promise<any> {
     });
 }
 
-export function apiFetch(
-  url: string,
-  otherParams?: AxiosRequestConfig
-): Promise<any> {
+export function apiFetch(url: string, otherParams?: AxiosRequestConfig) {
   return Axios.request({
     url,
     headers: {
@@ -21,8 +19,14 @@ export function apiFetch(
     method: otherParams ? otherParams.method : 'GET',
     data: otherParams ? otherParams.data : null,
   })
-    .then((response) => response.data)
+    .then((response) => {
+      console.log(response);
+      return response.data;
+    })
     .catch((errors) => {
+      if (errors.response.status === 401) {
+        history.push('/login');
+      }
       throw errors;
     });
 }
