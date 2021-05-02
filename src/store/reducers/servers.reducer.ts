@@ -1,7 +1,7 @@
 import { SERVERS_ACTIONS } from '../actions/types';
 import { ServerActions, ServersState } from '../types/server.types';
 
-const initialState: ServersState = {
+export const initialState: ServersState = {
   servers: [],
 };
 

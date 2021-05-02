@@ -1,5 +1,4 @@
 import Axios, { AxiosRequestConfig } from 'axios';
-import { history } from './configureStore';
 import { LoginRequest } from './types/auth.types';
 
 export function loginApi(authParams: LoginRequest): Promise<any> {
@@ -24,9 +23,6 @@ export function apiFetch(url: string, otherParams?: AxiosRequestConfig) {
       return response.data;
     })
     .catch((errors) => {
-      if (errors.response.status === 401) {
-        history.push('/login');
-      }
-      throw errors;
+      throw errors.response;
     });
 }

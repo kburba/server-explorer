@@ -6,7 +6,7 @@ import { LoginResponse, LoginUser } from '../types/auth.types';
 import { push } from 'connected-react-router';
 import { setError } from '../actions/ui.actions';
 
-function* logoutUserSaga() {
+export function* logoutUserSaga() {
   try {
     // Remove token from local storage
     localStorage.removeItem('access_token');
@@ -26,7 +26,7 @@ function* logoutUserSaga() {
   }
 }
 
-function* loginUserSaga({ payload }: LoginUser) {
+export function* loginUserSaga({ payload }: LoginUser) {
   try {
     const { username, password } = payload;
     const response: LoginResponse = yield call(loginApi, {
@@ -43,7 +43,7 @@ function* loginUserSaga({ payload }: LoginUser) {
     yield put(
       setError({
         key: 'login',
-        message: error.message,
+        message: error.data.message,
       })
     );
   }

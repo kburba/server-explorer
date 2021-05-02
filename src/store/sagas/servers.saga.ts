@@ -10,14 +10,14 @@ import {
 import { apiFetch } from '../storeUtils';
 import { ServerType } from '../types/server.types';
 
-function* getServersSaga() {
+export function* getServersSaga() {
   try {
     yield put(setLoader(['getServers']));
     yield put(resetErrors());
     const response: ServerType[] = yield call(apiFetch, '/v1/servers');
     yield put(getServersSuccess(response));
   } catch (error) {
-    yield put(setError({ key: 'getServers', message: error.message }));
+    yield put(setError({ key: 'getServers', message: error.data.message }));
   } finally {
     yield put(unsetLoader(['getServers']));
   }

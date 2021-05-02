@@ -13,6 +13,10 @@ table.kbtable {
         text-align: left;
         color: grey;
         cursor: pointer;
+
+        &.sorted {
+          color: $primary-color;
+        }
       }
     }
   }

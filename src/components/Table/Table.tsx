@@ -32,8 +32,9 @@ export default function Table({ columns, data }: TableProps) {
         <thead>
           <tr>
             {columns.map((column, idx) => {
+              const columnIsSorted = sortBy && sortBy.by === column.valueKey;
               const sortIcon =
-                sortBy && sortBy.by === column.valueKey
+                sortBy && columnIsSorted
                   ? sortBy.asc
                     ? String.fromCharCode(8595)
                     : String.fromCharCode(8593)
@@ -42,6 +43,7 @@ export default function Table({ columns, data }: TableProps) {
                 <th
                   key={`${idx}-${column}`}
                   onClick={() => setSort(column.valueKey)}
+                  {...(columnIsSorted && { className: 'sorted' })}
                 >
                   {column.title} {sortIcon}
                 </th>

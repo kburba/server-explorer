@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router';
 import { history } from './store/configureStore';
 import Login from './containers/Login';
 import Servers from './containers/servers/Servers';
-import './styles/index.scss';
+import './styles/_index.scss';
 import Logout from './containers/Logout';
 
 function App() {
